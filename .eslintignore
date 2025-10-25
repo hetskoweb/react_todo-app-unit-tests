@@ -1,2 +1,5 @@
 /build
 /node_modules
+jest.config.js
+jest.setup.ts
+page.spec.tsx
