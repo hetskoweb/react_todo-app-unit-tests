@@ -24,7 +24,7 @@ export const TodoFooter: React.FC<Props> = ({
   }
 
   return (
-    <footer className="todoapp__footer" data-cy="Footer">
+    <footer className="todoapp__footer" data-cy="Footer" role="contentinfo">
       <span className="todo-count" data-cy="TodosCounter">
         {itemsLeftText}
       </span>
@@ -51,8 +51,9 @@ export const TodoFooter: React.FC<Props> = ({
         type="button"
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
-        onClick={onClearCompleted}
+        onClick={() => onClearCompleted()}
         disabled={completedCount === 0}
+        aria-label="Clear completed todos"
       >
         Clear completed
       </button>

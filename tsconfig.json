@@ -5,6 +5,11 @@
   ],
   "compilerOptions": {
     "sourceMap": false,
-    "types": ["node"]
+    "types": [
+      "jest",
+      "node",
+      "@testing-library/jest-dom"
+    ],
+    "baseUrl": "./"
   }
 }
