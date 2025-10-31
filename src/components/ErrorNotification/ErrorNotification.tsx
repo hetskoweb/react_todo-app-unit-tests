@@ -34,9 +34,15 @@ export const ErrorNotification: React.FC<Props> = ({
     return undefined;
   }, [error, setError]);
 
+  if (error == null) {
+    return null;
+  }
+
   return (
     <div
       data-testid="ErrorNotification"
+      role="alert"
+      aria-live="assertive"
       className={classNames(
         'notification is-danger is-light has-text-weight-normal',
         {
@@ -50,7 +56,7 @@ export const ErrorNotification: React.FC<Props> = ({
         className="delete"
         onClick={onClose}
       />
-      {errorMessages[error]}
+      {errorMessages[error] || 'An unexpected error occurred'}
     </div>
   );
 };

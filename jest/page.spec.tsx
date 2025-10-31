@@ -45,11 +45,11 @@ describe('TodoFooter', () => {
     expect(screen.getByText('2 items left')).toBeInTheDocument();
   });
 
-  it('renders filter links with the correct selected class', () => {
+  it('renders filter links with the correct selected class and handles invalid filter gracefully', () => {
     render(
       <TodoFooter
         todos={todos}
-        currentFilter={FilterStatus.Active}
+        currentFilter={'InvalidFilter' as FilterStatus}
         onFilterChange={onFilterChange}
         onClearCompleted={onClearCompleted}
       />
@@ -58,15 +58,12 @@ describe('TodoFooter', () => {
     Object.values(FilterStatus).forEach(filter => {
       const link = screen.getByText(filter);
       expect(link).toBeInTheDocument();
-      if (filter === FilterStatus.Active) {
-        expect(link).toHaveClass('selected');
-      } else {
-        expect(link).not.toHaveClass('selected');
-      }
+      // none should be selected for invalid filter
+      expect(link).not.toHaveClass('selected');
     });
   });
 
-  it('calls onFilterChange when a filter link is clicked', () => {
+  it('calls onFilterChange with correct arguments when a filter link is clicked', () => {
     render(
       <TodoFooter
         todos={todos}
@@ -78,6 +75,7 @@ describe('TodoFooter', () => {
 
     const activeLink = screen.getByText(FilterStatus.Active);
     fireEvent.click(activeLink);
+    expect(onFilterChange).toHaveBeenCalledTimes(1);
     expect(onFilterChange).toHaveBeenCalledWith(FilterStatus.Active);
   });
 
@@ -109,7 +107,7 @@ describe('TodoFooter', () => {
     expect(button).not.toBeDisabled();
   });
 
-  it('calls onClearCompleted when the button is clicked', () => {
+  it('calls onClearCompleted with no arguments when clicked', () => {
     render(
       <TodoFooter
         todos={todos}
@@ -121,10 +119,47 @@ describe('TodoFooter', () => {
 
     const button = screen.getByRole('button', { name: /clear completed/i });
     fireEvent.click(button);
-    expect(onClearCompleted).toHaveBeenCalled();
+    expect(onClearCompleted).toHaveBeenCalledTimes(1);
+    expect(onClearCompleted).toHaveBeenCalledWith();
+  });
+
+  it('has proper accessibility roles and labels', () => {
+    render(
+      <TodoFooter
+        todos={todos}
+        currentFilter={FilterStatus.All}
+        onFilterChange={onFilterChange}
+        onClearCompleted={onClearCompleted}
+      />
+    );
+
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /clear completed/i })).toHaveAttribute('aria-label', expect.stringContaining('Clear'));
+  });
+
+  it('handles performance gracefully with large number of todos', () => {
+    const largeTodos = Array.from({ length: 1000 }, (_, i) => ({
+      userId: 1,
+      id: i,
+      title: `Task ${i}`,
+      completed: i % 2 === 0,
+    }));
+
+    const start = performance.now();
+
+    render(
+      <TodoFooter
+        todos={largeTodos}
+        currentFilter={FilterStatus.All}
+        onFilterChange={onFilterChange}
+        onClearCompleted={onClearCompleted}
+      />
+    );
+
+    const end = performance.now();
+    expect(end - start).toBeLessThan(100);
   });
 });
-
 
 describe('ErrorNotification', () => {
   const onClose = jest.fn();
@@ -135,29 +170,38 @@ describe('ErrorNotification', () => {
     jest.useRealTimers();
   });
 
-  it('renders the "load" error message', () => {
+  const knownErrors = {
+    load: 'Unable to load todos',
+    add: 'Unable to add a todo',
+    delete: 'Unable to delete a todo',
+    update: 'Unable to update a todo',
+    empty: 'Title should not be empty',
+  };
+
+  Object.entries(knownErrors).forEach(([key, message]) => {
+    it(`renders "${key}" error message`, () => {
+      render(<ErrorNotification error={key} setError={setError} onClose={onClose} />);
+      expect(screen.getByText(message)).toBeInTheDocument();
+    });
+  });
+
+  it('renders fallback message for unexpected error type', () => {
+    render(<ErrorNotification error="unknownError" setError={setError} onClose={onClose} />);
+    expect(screen.getByText('An unexpected error occurred')).toBeInTheDocument();
+  });
+
+  it('handles null or undefined error safely', () => {
+    const { rerender } = render(<ErrorNotification error={null as any} setError={setError} onClose={onClose} />);
+    expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
+
+    rerender(<ErrorNotification error={undefined as any} setError={setError} onClose={onClose} />);
+    expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
+  });
+
+  it('has appropriate accessibility roles and attributes', () => {
     render(<ErrorNotification error="load" setError={setError} onClose={onClose} />);
-    expect(screen.getByText('Unable to load todos')).toBeInTheDocument();
-  });
-
-  it('renders the "add" error message', () => {
-    render(<ErrorNotification error="add" setError={setError} onClose={onClose} />);
-    expect(screen.getByText('Unable to add a todo')).toBeInTheDocument();
-  });
-
-  it('renders the "delete" error message', () => {
-    render(<ErrorNotification error="delete" setError={setError} onClose={onClose} />);
-    expect(screen.getByText('Unable to delete a todo')).toBeInTheDocument();
-  });
-
-  it('renders the "update" error message', () => {
-    render(<ErrorNotification error="update" setError={setError} onClose={onClose} />);
-    expect(screen.getByText('Unable to update a todo')).toBeInTheDocument();
-  });
-
-  it('renders the "empty" error message', () => {
-    render(<ErrorNotification error="empty" setError={setError} onClose={onClose} />);
-    expect(screen.getByText('Title should not be empty')).toBeInTheDocument();
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveAttribute('aria-live', 'assertive');
   });
 
   it('hides the notification if error is empty', () => {
@@ -166,7 +210,7 @@ describe('ErrorNotification', () => {
     expect(notification).toHaveClass('hidden');
   });
 
-  it('calls onClose when the delete button is clicked', () => {
+  it('calls onClose when the hide button is clicked', () => {
     render(<ErrorNotification error="load" setError={setError} onClose={onClose} />);
     const button = screen.getByTestId('HideErrorButton');
     fireEvent.click(button);
