@@ -1,17 +1,20 @@
-name: Deploy React App
+name: Deploy App and Docs
 
 on:
   push:
     branches:
       - main
+      - features/docs-ci
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -24,9 +27,14 @@ jobs:
       - name: Build React App
         run: npm run build
 
-      - name: Deploy to GitHub Pages (root)
+      - name: Build TypeDoc docs
+        run: npm run docs
+
+      - name: Move docs to build folder
+        run: mv docs build/docs
+
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
-          keep_files: true
