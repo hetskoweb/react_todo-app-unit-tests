@@ -34,6 +34,7 @@ jobs:
 
       - name: Prepare Build Folder
         run: |
+          # Переименовываем dist в build, если используется Vite
           if [ -d "dist" ]; then
             mv dist build
           elif [ -d "build" ]; then
@@ -46,10 +47,12 @@ jobs:
 
       - name: Move docs and Create .nojekyll
         run: |
+          # Перемещаем документацию внутрь папки сборки
           mv docs build/docs
+          # Создаем файл, чтобы GitHub не игнорировал папки с подчеркиванием (например, assets)
           touch build/.nojekyll
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
