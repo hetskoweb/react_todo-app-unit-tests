@@ -3,7 +3,7 @@ name: Build Documentation
 on:
   push:
     branches:
-      - feature/docs-ci
+      - features/docs-ci
 
 jobs:
   build-docs:
