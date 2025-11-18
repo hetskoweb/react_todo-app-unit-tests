@@ -3,9 +3,6 @@ name: Build Documentation
 on:
   push:
     branches:
-      - main
-      - unit-tests
-      - gh-pages
       - feature/docs-ci
 
 jobs:
