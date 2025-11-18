@@ -2,6 +2,15 @@ import { useEffect } from 'react';
 import { ErrorType } from '../../types/ErrorType';
 import classNames from 'classnames';
 
+/**
+ * @brief Displays error notifications.
+ *
+ * @param {Object} props
+ * @param {ErrorType} props.error - Current error.
+ * @param {(error: ErrorType) => void} props.setError - Setter for error.
+ * @param {() => void} props.onClose - Close handler.
+ * @returns {JSX.Element}
+ */
 type Props = {
   error: ErrorType;
   setError: (error: ErrorType) => void;
@@ -39,9 +48,7 @@ export const ErrorNotification: React.FC<Props> = ({
       data-cy="ErrorNotification"
       className={classNames(
         'notification is-danger is-light has-text-weight-normal',
-        {
-          hidden: !error,
-        },
+        { hidden: !error },
       )}
     >
       <button

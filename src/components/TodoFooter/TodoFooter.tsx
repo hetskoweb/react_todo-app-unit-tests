@@ -2,6 +2,16 @@ import { FilterStatus } from '../../types/FilterStatus';
 import { Todo } from '../../types/Todo';
 import classNames from 'classnames';
 
+/**
+ * @brief Footer component for filtering and clearing completed todos.
+ *
+ * @param {Object} props
+ * @param {Todo[]} props.todos - All todos.
+ * @param {FilterStatus} props.currentFilter - Current filter.
+ * @param {(filter: FilterStatus) => void} props.onFilterChange - Filter change handler.
+ * @param {() => void} props.onClearCompleted - Clear completed handler.
+ * @returns {JSX.Element | null}
+ */
 type Props = {
   todos: Todo[];
   currentFilter: FilterStatus;
@@ -28,8 +38,6 @@ export const TodoFooter: React.FC<Props> = ({
       <span className="todo-count" data-cy="TodosCounter">
         {itemsLeftText}
       </span>
-
-      {/* Active link should have the 'selected' class */}
       <nav className="filter" data-cy="Filter">
         {Object.values(FilterStatus).map(filter => (
           <a
@@ -45,8 +53,6 @@ export const TodoFooter: React.FC<Props> = ({
           </a>
         ))}
       </nav>
-
-      {/* this button should be disabled if there are no completed todos */}
       <button
         type="button"
         className="todoapp__clear-completed"
