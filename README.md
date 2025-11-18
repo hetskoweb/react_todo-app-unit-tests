@@ -63,3 +63,24 @@ npm start
 # or
 yarn start
 ```
+
+## CI/CD (GitHub Actions) ⚙️
+
+The workflow performs the following steps:
+
+1. Repository checkout
+2. Node.js setup and dependency installation
+3. Documentation generation via TypeDoc
+4. Automatic deployment of generated HTML docs to the `gh-pages` branch
+
+### Summary 📝
+
+During the lab work, the following was accomplished:
+
+- Documented the code using TypeDoc/JSDoc comments
+- Generated HTML documentation
+- Configured CI/CD with GitHub Actions
+- Automated deployment of documentation to GitHub Pages
+
+The documentation system is fully automated: after each push to the `features/docs-ci` branch, GitHub Actions builds the docs and deploys them, making them immediately available online.
+

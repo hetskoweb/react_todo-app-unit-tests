@@ -20,6 +20,17 @@ import { TodoFooter } from './components/TodoFooter/TodoFooter';
 // eslint-disable-next-line max-len
 import { ErrorNotification } from './components/ErrorNotification/ErrorNotification';
 
+/**
+ * @brief Main application component that renders the TodoApp.
+ *
+ * @component
+ *
+ * @returns {JSX.Element} React application root.
+ *
+ * @example
+ * <App />
+ */
+
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [query, setQuery] = useState('');

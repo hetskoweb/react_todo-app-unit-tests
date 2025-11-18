@@ -1,0 +1,16 @@
+{
+  "entryPoints": [
+    "src",
+    "src/api",
+    "src/types"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "excludePrivate": true,
+  "excludeExternals": false,
+  "readme": "none",
+  "theme": "default",
+  "tsconfig": "tsconfig.json",
+  "includeVersion": true,
+  "basePath": "."
+}

@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "node_modules/jsdoc-plugin-typescript"
+  ],
+  "source": {
+    "include": [
+      "src"
+    ],
+    "includePattern": ".+\\.(ts|tsx)$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "opts": {
+    "destination": "docs",
+    "recurse": true,
+    "template": "default"
+  },
+  "typescript": {
+    "module": "commonjs"
+  }
+}

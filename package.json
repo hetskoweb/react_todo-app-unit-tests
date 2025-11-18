@@ -12,10 +12,13 @@
     "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
     "@mate-academy/scripts": "^2.1.2",
     "@mate-academy/students-ts-config": "*",
     "@mate-academy/stylelint-config": "*",
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.19.25",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-transition-group": "^4.4.10",
@@ -32,10 +35,16 @@
     "eslint-plugin-react": "^7.34.4",
     "eslint-plugin-react-hooks": "^4.6.2",
     "gh-pages": "^6.1.1",
+    "jsdoc": "^4.0.5",
+    "jsdoc-plugin-typescript": "^3.2.0",
+    "minami": "^1.2.3",
     "prettier": "^3.3.2",
     "sass": "^1.77.8",
     "stylelint": "^16.7.0",
-    "typescript": "^5.2.2",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.28.14",
+    "typedoc-plugin-react": "^0.1.0",
+    "typescript": "^5.9.3",
     "vite": "^5.3.1"
   },
   "scripts": {
@@ -49,7 +58,8 @@
     "update": "mate-scripts update",
     "postinstall": "npm run update && cypress verify",
     "predeploy": "npm run build",
-    "deploy": "mate-scripts deploy"
+    "deploy": "mate-scripts deploy",
+    "docs": "typedoc --out docs src/index.tsx"
   },
   "browserslist": {
     "production": [
