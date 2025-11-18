@@ -30,8 +30,22 @@ jobs:
       - name: Build TypeDoc docs
         run: npm run docs
 
-      - name: Move docs to build folder
-        run: mv docs build/docs
+      - name: Prepare Build Folder
+        run: |
+          if [ -d "dist" ]; then
+            mv dist build
+          elif [ -d "build" ]; then
+            echo "Build folder found."
+          else
+            echo "ERROR: Build or dist folder not found!"
+            ls -la
+            exit 1
+          fi
+
+      - name: Move docs and Create .nojekyll
+        run: |
+          mv docs build/docs
+          touch build/.nojekyll
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
